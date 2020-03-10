@@ -61,8 +61,6 @@ server.delete("/api/users/:id", (req, res) => {
 
     const userIndex = users.findIndex(person => person.id === id);
 
-    console.log("userIndex: ", userIndex);
-
     if (userIndex > -1) {
         users.splice(userIndex, 1);
         res.status(200).json(users);
@@ -74,6 +72,29 @@ server.delete("/api/users/:id", (req, res) => {
 
     // if there were an error saving to database
     // res.status(500).send({ errorMessage: "The user could not be removed" })
+});
+
+server.put("/api/users/:id", (req, res) => {
+    const id = req.params.id;
+
+    const userIndex = users.findIndex(person => person.id === id);
+
+    if (userIndex > -1) {
+        const updatedUser = {
+            ...users[userIndex],
+            ...req.body
+        };
+        users[userIndex] = updatedUser;
+
+        res.status(200).json(users[userIndex]);
+    } else {
+        res.status(404).json({
+            errorMessage: "The user with the specified ID does not exist."
+        });
+    }
+
+    // if there were an error saving to database
+    // res.status(500).send({ errorMessage: "The user information could not be modified." })
 });
 
 server.listen(port, () => console.log(`server listening on port ${port}`));
