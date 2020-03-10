@@ -56,4 +56,24 @@ server.post("/api/users", (req, res) => {
     // res.status(500).send({ errorMessage: "There was an error while saving the user to the database" })
 });
 
+server.delete("/api/users/:id", (req, res) => {
+    const id = req.params.id;
+
+    const userIndex = users.findIndex(person => person.id === id);
+
+    console.log("userIndex: ", userIndex);
+
+    if (userIndex > -1) {
+        users.splice(userIndex, 1);
+        res.status(200).json(users);
+    } else {
+        res.status(404).send({
+            errorMessage: "The user with the specified ID does not exist"
+        });
+    }
+
+    // if there were an error saving to database
+    // res.status(500).send({ errorMessage: "The user could not be removed" })
+});
+
 server.listen(port, () => console.log(`server listening on port ${port}`));
